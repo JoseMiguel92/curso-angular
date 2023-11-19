@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateAuthDto } from './dto/update-auth.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -27,12 +27,13 @@ export class AuthService {
         ...userData
       });
       await newUser.save();
-      const { password: _, ...user } = newUser.toJSON();
+      const { password:_, ...user } = newUser.toJSON();
       return user;
     } catch (error) {
       if (error.code === 11000) {
         throw new BadRequestException(`${createUserDto.email}`)
       }
+      throw new InternalServerErrorException('Something terribe happen!!!');
     }
 
   }
@@ -62,7 +63,7 @@ export class AuthService {
       throw new UnauthorizedException("Not valid credentials");
     }
 
-    const { password: _, ...rest } = user.toJSON();
+    const { password:_, ...rest } = user.toJSON();
 
     return {
       user: rest,
@@ -80,15 +81,15 @@ export class AuthService {
     return response;
   }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} auth`;
-  // }
+  findOne(id: number) {
+    return `This action returns a #${id} auth`;
+  }
 
-  // update(id: number, updateAuthDto: UpdateAuthDto) {
-  //   return `This action updates a #${id} auth`;
-  // }
+  update(id: number, updateAuthDto: UpdateAuthDto) {
+    return `This action updates a #${id} auth`;
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} auth`;
-  // }
+  remove(id: number) {
+    return `This action removes a #${id} auth`;
+  }
 }
